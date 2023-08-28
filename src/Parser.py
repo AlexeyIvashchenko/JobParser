@@ -20,7 +20,6 @@ class HHParser(Parser):
         self.keyword = keyword
 
     def get_info(self):
-        """Получает информацию о вакансиях по API"""
         params = {
             'text': self.keyword,
         }
@@ -69,4 +68,53 @@ class SJParser:
                 x.get('payment_from', 0),
                 x.get('payment_to', 0),
                 x.get('currency', '') == 'rub'), reverse=True)
+            json.dump(sorted_vacancies, file, indent=4, ensure_ascii=False)
+
+
+class FullParser:
+    def __init__(self, keyword=None):
+        self.base_url_hh = 'https://api.hh.ru/vacancies/?area=113'
+        self.keyword = keyword
+        self.url_js = 'https://api.superjob.ru/2.0/vacancies/'
+        self.api_key_js = 'v3.r.137776472.0ac84d69266fe4c87319cbcd3bf890a7a5f576e4.98cd32a7598f507f8a21258477cc81ae2e76b1a2'
+
+    def get_salary(self, vacancy):
+        if 'salary' in vacancy and vacancy['salary'] is not None:
+            return vacancy['salary']['from'] if 'from' in vacancy['salary'] else 0
+        elif 'payment_from' in vacancy:
+            return vacancy['payment_from']
+        return 0
+
+    def get_info(self):
+        headers = {
+            'X-Api-App-Id': self.api_key_js,
+        }
+        params = {
+            'keyword': self.keyword,
+        }
+        response_hh = requests.get(self.base_url_hh, params=params)
+        response_js = requests.get(self.url_js, headers=headers, params=params)
+
+        data_hh = response_hh.json()
+        vacancies_hh = data_hh.get('items', [])
+
+        data_js = response_js.json()
+        vacancies_js = data_js.get('objects', [])
+
+        for vacancy in vacancies_js:
+            vacancy['payment_from'] = vacancy.get('payment_from', 0)
+            vacancy['currency'] = vacancy.get('currency', '')
+            vacancy['requirement'] = vacancy.get('candidat', '')
+            vacancy['responsibility'] = vacancy.get('vacancyRichText', '')
+
+        all_vacancies = vacancies_hh + vacancies_js
+        return all_vacancies
+
+    def to_json(self):
+        with open('combined_vacancies.json', 'w', encoding='utf-8') as file:
+            request = self.get_info()
+
+            sorted_vacancies = sorted(request, key=lambda x: (
+                self.get_salary(x),
+                'RUR' in x.get('currency', '')), reverse=True)
             json.dump(sorted_vacancies, file, indent=4, ensure_ascii=False)

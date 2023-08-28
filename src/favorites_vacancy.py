@@ -5,37 +5,27 @@ from abc import ABC, abstractmethod
 class FavVac(ABC):
 
     @abstractmethod
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def add_to_file(self):
+    def add_to_file(self, diction):
         pass
 
     @abstractmethod
     def delete_from_file(self, number):
         pass
 
-    @abstractmethod
-    def get_the_information(self):
-        pass
-
 
 class FavJson(FavVac):
-    def __init__(self, diction):
-        self.diction = {}
 
-    def add_to_file(self):
+    def add_to_file(self, diction):
         try:
             with open('favorites_vacancy.json', 'r') as file:
                 data = json.load(file)
         except FileNotFoundError:
             data = []
 
-        data.append(self.diction)
+        data.append(diction)
 
         with open('favorites_vacancy.json', 'w') as file:
-            json.dump(data, file, indent=4, encoding='utf-8')
+            json.dump(data, file, indent=4, ensure_ascii=False)
 
     def delete_from_file(self, number):
         try:
@@ -48,11 +38,3 @@ class FavJson(FavVac):
 
         with open('favorites_vacancy.json', 'w') as file:
             json.dump(data, file, indent=4, encoding='utf-8')
-
-    def get_the_information(self):
-        try:
-            with open('favorites_vacancy.json', 'r') as file:
-                data = json.load(file)
-        except FileNotFoundError:
-            data = []
-        print(data)

@@ -1,46 +1,94 @@
-from abc import ABC, abstractmethod
-
-
-class Vacancy(ABC):
-    @abstractmethod
-    def __init__(self):
-        pass
-
-
-class HHVacancy(Vacancy):
+class HHVacancy:
     def __init__(self, number):
         self.number = number
+        self.name = ''
+        self.salery_from = ''
+        self.url = ''
+        self.responsibility = ''
 
     def __str__(self):
-        self.name = str()
-        self.salery_from = int()
-        self.currency = 'RUB'
-        self.url = str()
-        self.responsibility = str()
+        return f"Номер: {self.number}, Название: {self.name}, Зарплата: {self.salery_from}, URL: {self.url}, Обязанности: {self.responsibility}"
 
-    def __ge__(self, other):
-        if self.salery_from > other.salery_from:
-            print("Заработная плата первой вакансии больше.")
-        elif self.salery_from < other.salery_from:
-            print("Заработная плата второй вакансии больше.")
-        else:
-            print("Предлагаемые заработные платы равны, или их невозможно сравнить.")
+    def __dict__(self):
+        return {
+            "number": self.number,
+            "name": self.name,
+            "salery_from": self.salery_from,
+            "url": self.url,
+            "responsibility": self.responsibility
+        }
 
-    class SJVacancy(Vacancy):
-        def __init__(self, number):
-            self.number = number
-
-        def __str__(self):
-            self.name = ''
-            self.salery_from = 0
-            self.currency = 'RUB'
-            self.url = ''
-            self.responsibility = ''
-
-        def __ge__(self, other):
-            if self.salery_from > other.salery_from:
+    def compare_salary(self, other):
+        if self.salery_from and other.salery_from:
+            if int(self.salery_from) > int(other.salery_from):
                 print("Заработная плата первой вакансии больше.")
-            elif self.salery_from < other.salery_from:
+            elif int(self.salery_from) < int(other.salery_from):
                 print("Заработная плата второй вакансии больше.")
             else:
                 print("Предлагаемые заработные платы равны, или их невозможно сравнить.")
+        else:
+            print("У одной из вакансий нет указанной заработной платы.")
+
+
+class SJVacancy:
+    def __init__(self, number):
+        self.number = number
+        self.name = ''
+        self.salery_from = ''
+        self.url = ''
+        self.responsibility = ''
+
+    def __str__(self):
+        return f"Номер: {self.number}, Название: {self.name}, Зарплата: {self.salery_from}, URL: {self.url}, Обязанности: {self.responsibility}"
+
+    def __dict__(self):
+        return {
+            "number": self.number,
+            "name": self.name,
+            "salery_from": self.salery_from,
+            "url": self.url,
+            "responsibility": self.responsibility
+        }
+
+    def compare_salary(self, other):
+        if self.salery_from and other.salery_from:
+            if int(self.salery_from) > int(other.salery_from):
+                print("Заработная плата первой вакансии больше.")
+            elif int(self.salery_from) < int(other.salery_from):
+                print("Заработная плата второй вакансии больше.")
+            else:
+                print("Предлагаемые заработные платы равны, или их невозможно сравнить.")
+        else:
+            print("У одной из вакансий нет указанной заработной платы.")
+
+
+class CombVacancy:
+    def __init__(self, number):
+        self.number = number
+        self.name = ''
+        self.salery_from = ''
+        self.url = ''
+        self.responsibility = ''
+
+    def __str__(self):
+        return f"Номер: {self.number}, Название: {self.name}, Зарплата: {self.salery_from}, URL: {self.url}, Обязанности: {self.responsibility}"
+
+    def __dict__(self):
+        return {
+            "number": self.number,
+            "name": self.name,
+            "salery_from": self.salery_from,
+            "url": self.url,
+            "responsibility": self.responsibility
+        }
+
+    def compare_salary(self, other):
+        if self.salery_from and other.salery_from:
+            if int(self.salery_from) > int(other.salery_from):
+                print("Заработная плата первой вакансии больше.")
+            elif int(self.salery_from) < int(other.salery_from):
+                print("Заработная плата второй вакансии больше.")
+            else:
+                print("Предлагаемые заработные платы равны, или их невозможно сравнить.")
+        else:
+            print("У одной из вакансий нет указанной заработной платы.")
