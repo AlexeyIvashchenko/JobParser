@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
 import json
-import os
 
 
 class Parser(ABC):
@@ -14,11 +13,13 @@ class Parser(ABC):
         pass
 
 
+# класс для парсинга сайта hh.ru
 class HHParser(Parser):
     def __init__(self, keyword=None):
         self.base_url = 'https://api.hh.ru/vacancies/?area=113'
         self.keyword = keyword
 
+# получает информацию с сайта через API
     def get_info(self):
         params = {
             'text': self.keyword,
@@ -30,6 +31,7 @@ class HHParser(Parser):
         else:
             return []
 
+# сортирует данные по заработной плате и сохраняет в файл vacansies_from_hh.json
     def to_json(self):
         with open('vacansies_from_hh.json', 'w', encoding='utf-8') as file:
             request = self.get_info()
@@ -42,12 +44,14 @@ class HHParser(Parser):
             json.dump(sorted_vacancies, file, indent=4, ensure_ascii=False)
 
 
+# класс для парсинга сайта Superjob.ru
 class SJParser:
     def __init__(self, params=None):
         self.url = 'https://api.superjob.ru/2.0/vacancies/'
         self.api_key = 'v3.r.137776472.0ac84d69266fe4c87319cbcd3bf890a7a5f576e4.98cd32a7598f507f8a21258477cc81ae2e76b1a2'
         self.params = params
 
+    # получает информацию с сайта через API
     def get_info(self):
         headers = {
             'X-Api-App-Id': self.api_key,
@@ -61,6 +65,7 @@ class SJParser:
         vacancies = data.get('objects', [])
         return vacancies
 
+    # сортирует данные по заработной плате и сохраняет в файл vacansies_from_sj.json
     def to_json(self):
         with open('vacansies_from_sj.json', 'w', encoding='utf-8') as file:
             request = self.get_info()
@@ -71,6 +76,7 @@ class SJParser:
             json.dump(sorted_vacancies, file, indent=4, ensure_ascii=False)
 
 
+# класс для парсинга обоих сайтов
 class FullParser:
     def __init__(self, keyword=None):
         self.base_url_hh = 'https://api.hh.ru/vacancies/?area=113'
@@ -78,6 +84,7 @@ class FullParser:
         self.url_js = 'https://api.superjob.ru/2.0/vacancies/'
         self.api_key_js = 'v3.r.137776472.0ac84d69266fe4c87319cbcd3bf890a7a5f576e4.98cd32a7598f507f8a21258477cc81ae2e76b1a2'
 
+# приводит данные к стандартному виду
     def get_salary(self, vacancy):
         if 'salary' in vacancy and vacancy['salary'] is not None:
             return vacancy['salary']['from'] if 'from' in vacancy['salary'] else 0
@@ -85,6 +92,7 @@ class FullParser:
             return vacancy['payment_from']
         return 0
 
+    # получает информацию с сайтов через API
     def get_info(self):
         headers = {
             'X-Api-App-Id': self.api_key_js,
@@ -110,6 +118,7 @@ class FullParser:
         all_vacancies = vacancies_hh + vacancies_js
         return all_vacancies
 
+    # сортирует данные по заработной плате и сохраняет в файл combined_vacancies.json
     def to_json(self):
         with open('combined_vacancies.json', 'w', encoding='utf-8') as file:
             request = self.get_info()

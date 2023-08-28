@@ -1,3 +1,4 @@
+#класс для работы с данными с сайта hh.ru
 class HHVacancy:
     def __init__(self, number):
         self.number = number
@@ -18,6 +19,7 @@ class HHVacancy:
             "responsibility": self.responsibility
         }
 
+#функция для сравнения зароботных плат
     def compare_salary(self, other):
         if self.salery_from and other.salery_from:
             if int(self.salery_from) > int(other.salery_from):
@@ -30,6 +32,7 @@ class HHVacancy:
             print("У одной из вакансий нет указанной заработной платы.")
 
 
+#класс для работы с данными с сайта Superjob.ru
 class SJVacancy:
     def __init__(self, number):
         self.number = number
@@ -50,6 +53,7 @@ class SJVacancy:
             "responsibility": self.responsibility
         }
 
+    # функция для сравнения зароботных плат
     def compare_salary(self, other):
         if self.salery_from and other.salery_from:
             if int(self.salery_from) > int(other.salery_from):
@@ -62,6 +66,7 @@ class SJVacancy:
             print("У одной из вакансий нет указанной заработной платы.")
 
 
+#класс для работы с данными с обоих сайтов
 class CombVacancy:
     def __init__(self, number):
         self.number = number
@@ -82,6 +87,7 @@ class CombVacancy:
             "responsibility": self.responsibility
         }
 
+    # функция для сравнения зароботных плат
     def compare_salary(self, other):
         if self.salery_from and other.salery_from:
             if int(self.salery_from) > int(other.salery_from):

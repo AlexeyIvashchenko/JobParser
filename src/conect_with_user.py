@@ -8,6 +8,7 @@ from src.favorites_vacancy import FavJson
 import json
 
 
+#класс для работы с интерфейсом пользователя
 class HelloUser:
 
     def options_for_action(self, number):
@@ -79,6 +80,7 @@ class HelloUser:
             Если желаете удалить все, введите 'Все'
             '''))
 
+#получает и выводит вакансии с hh.ru в читабельном виде, предварительно записав в файл и отсортировав
     def take_hh_vacancy(self, word=None):
         hhp = HHParser(word)
         hhp.to_json()
@@ -104,6 +106,7 @@ class HelloUser:
         0.Завершить работу
         '''))
 
+    # получает и выводит вакансии с Superjob.ru в читабельном виде, предварительно записав в файл и отсортировав
     def take_sj_vacancy(self, word=None):
         sjp = SJParser(word)
         sjp.to_json()
@@ -129,6 +132,7 @@ class HelloUser:
         0.Завершить работу
         '''))
 
+    # получает и выводит вакансии с двух сайтов в читабельном виде, предварительно записав в файл и отсортировав
     def take_comb_vacancy(self, word=None):
         cp = FullParser(word)
         cp.to_json()
